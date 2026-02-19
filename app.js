@@ -1,46 +1,66 @@
 /**
- * Main function to fetch API data, transform it, and plot using tfjs-vis.
+ * Main function to fetch data and render multiple chart types
  */
-async function fetchAndPlotData() {
+async function runVisualization() {
     const statusEl = document.getElementById('status');
     const url = 'https://jsonplaceholder.typicode.com/users';
 
     try {
-        // 1. Remote API Call
+        statusEl.innerText = "Fetching data...";
         const response = await fetch(url);
-        if (!response.ok) throw new Error('Network response was not ok');
         const users = await response.json();
 
-        // 2. Transform Data
-        // We are transforming the array of user objects into a format 
-        // the tfjs barchart understands: { index: string, value: number }
-        const chartData = users.map(user => ({
-            index: user.username, // X-axis label
-            value: user.name.length // Y-axis value (length of their full name)
+        // --- 1. BAR CHART DATA ---
+        // Showing: Username vs Length of Full Name
+        const barData = users.map(u => ({
+            index: u.username,
+            value: u.name.length
         }));
 
-        // 3. Plot using Tensorflow.js Visor
-        const container = {
-            name: 'User Name Lengths',
-            tab: 'User Statistics'
-        };
+        // --- 2. LINE CHART DATA ---
+        // Showing: User ID vs Length of their Website URL (Trend analysis)
+        const lineData = users.map(u => ({
+            x: u.id,
+            y: u.website.length
+        }));
 
-        const options = {
-            xLabel: 'Username',
-            yLabel: 'Full Name Character Count',
-            height: 400
-        };
+        // --- 3. SCATTER PLOT DATA ---
+        // Showing: Correlation between Name length and Email length
+        const scatterData = users.map(u => ({
+            x: u.name.length,
+            y: u.email.length
+        }));
 
-        // Render the bar chart in the visor
-        tfvis.render.barchart(container, chartData, options);
-        
-        statusEl.innerText = "";
+        // RENDER SECTION
+        statusEl.innerText = "Rendering charts in Visor...";
+
+        // Render Bar Chart
+        tfvis.render.barchart(
+            { name: 'Name Lengths', tab: 'Charts' }, 
+            barData, 
+            { xLabel: 'User', yLabel: 'Char Count', height: 300 }
+        );
+
+        // Render Line Chart
+        tfvis.render.linechart(
+            { name: 'Website URL Length Trend', tab: 'Charts' }, 
+            { values: [lineData], series: ['URL Length'] }, 
+            { xLabel: 'User ID', yLabel: 'Length', height: 300 }
+        );
+
+        // Render Scatter Plot
+        tfvis.render.scatterplot(
+            { name: 'Name vs Email Length Correlation', tab: 'Analysis' }, 
+            { values: [scatterData], series: ['Users'] }, 
+            { xLabel: 'Name Length', yLabel: 'Email Length', height: 300 }
+        );
+
+        statusEl.innerHTML = "✅ <strong>Success!</strong> Open the Visor panel on the right (or press '`' backtick key) to view the Charts and Analysis tabs.";
 
     } catch (error) {
-        console.error('Error:', error);
-        statusEl.innerText = "Failed to load data. Check the console for details.";
+        statusEl.innerText = "Error: " + error.message;
+        console.error(error);
     }
 }
 
-// Execute the function when the page loads
-window.onload = fetchAndPlotData;
+window.onload = runVisualization;

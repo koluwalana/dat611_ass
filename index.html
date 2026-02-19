@@ -3,19 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TFJS Visor Assignment</title>
+    <title>TFJS Data Visualization</title>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis"></script>
     <style>
-        body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
-        .status { color: #666; font-style: italic; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; background-color: #f4f7f6; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; }
+        #status { padding: 10px; margin-top: 20px; border-left: 5px solid #2196F3; background: #e3f2fd; }
     </style>
 </head>
 <body>
-    <h1>User Data Visualization</h1>
-    <p>Fetching data from JSONPlaceholder and rendering with <strong>Tensorflow.js Visor</strong>...</p>
-    <div id="status" class="status">Loading visualization...</div>
-
+    <div class="container">
+        <h1>Advanced Data Visualization</h1>
+        <p>This app fetches user data and generates multiple charts using <strong>tfjs-vis</strong>.</p>
+        <div id="status">Initializing charts...</div>
+    </div>
     <script src="app.js"></script>
 </body>
 </html>
